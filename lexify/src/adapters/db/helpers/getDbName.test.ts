@@ -1,4 +1,4 @@
-import {getDbName} from "./getDbName";
+import { getDbName } from "./getDbName";
 import { expect, test } from 'vitest'
 
 test('getDbName dev', () => {
@@ -10,7 +10,7 @@ test('getDbName dev', () => {
 
 test('getDbName prod', () => {
     const expected = 'lexi_drift';
-    const actual = getDbName('mongodb+srv://user:password@cluster.mongodb.net/lexi_drift?retryWrites=true&w=majority&appName=Cluster0');
+    const actual = getDbName('mongodb+srv://<user>:<password>@cluster.example.net/lexi_drift?retryWrites=true&w=majority');
 
     expect(actual).toBe(expected);
 });
