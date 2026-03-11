@@ -14,3 +14,46 @@ test('getDbName prod', () => {
 
     expect(actual).toBe(expected);
 });
+
+// Build command:pnpm build
+// Build output:dist
+// Root directory:
+// Build comments:Enabled
+
+// Secret
+// 	MONGO_DB_NAME
+// 	Value encrypted
+	
+// Secret
+// 	MONGO_URI
+// 	Value encrypted
+	
+// Plaintext
+// 	NODE_ENV
+// 	production
+
+//  lexidrift-landing.pages.dev
+
+// 	CNAME
+	
+// docs
+	
+// lexidrift-docs.pages.dev
+	
+
+// Proxied
+	
+// Auto
+	
+	
+
+// 	CNAME
+	
+// lexidrift.com
+	
+// lexidrift-landing.pages.dev
+	
+
+// Proxied
+	
+// Auto
