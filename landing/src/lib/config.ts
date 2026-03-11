@@ -20,9 +20,23 @@ const result = configSchema.safeParse(envVars);
 if (!result.success) {
     const error = result.error.format();
 
-    // DEBUG: Log all available keys to see what's actually there
-    console.log("🔍 DEBUG: Astro env keys (import.meta.env):", Object.keys(import.meta.env));
-    console.log("🔍 DEBUG: System env keys (process.env):", Object.keys((globalThis as any).process?.env || {}));
+    console.log("--- 🕵️ EXHAUSTIVE ENV DIAGNOSTIC ---");
+    console.log("🔍 import.meta.env keys:", Object.keys(import.meta.env));
+    const processEnv = (globalThis as any).process?.env || {};
+    console.log("🔍 process.env keys:", Object.keys(processEnv));
+
+    // Check for Cloudflare specific markers
+    console.log("🔍 CF_PAGES:", processEnv.CF_PAGES);
+    console.log("🔍 NODE_VERSION:", processEnv.NODE_VERSION);
+
+    // Check if maybe it's prefixed?
+    const possibleMatches = Object.keys(processEnv).filter(k => k.includes("MONGO"));
+    if (possibleMatches.length > 0) {
+        console.log("🔍 Found similar keys:", possibleMatches);
+    } else {
+        console.log("❌ No key containing 'MONGO' found in process.env");
+    }
+    console.log("-----------------------------------");
 
     if (error.MONGO_URI) {
         throw new Error(`\n\n❌ ${error.MONGO_URI._errors.join(", ")}\n`);
