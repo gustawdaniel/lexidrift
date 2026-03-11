@@ -19,6 +19,10 @@ const result = configSchema.safeParse(envVars);
 
 if (!result.success) {
     const error = result.error.format();
+
+    // DEBUG: Log all available keys to see what's actually there
+    console.log("🔍 DEBUG: Available environment variable keys:", Object.keys(envVars));
+
     if (error.MONGO_URI) {
         throw new Error(`\n\n❌ ${error.MONGO_URI._errors.join(", ")}\n`);
     }
