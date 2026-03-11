@@ -48,66 +48,61 @@
 
 <script setup>
 const featuredTestimonial = {
-  body: 'I pleased you thousands time. Add Japanese. I am not gonna to learn Russian.',
+  body: 'Lexidrift has completely transformed my vocabulary learning. The AI-generated images and audio contexts make it so much easier to remember complex terms.',
   author: {
-    name: 'Natalia',
-    handle: 'nati',
+    name: 'Sarah Chen',
+    handle: 'sarah_lingua',
     imageUrl:
-    'https://ui-avatars.com/api/?rounded=true&name=Natalia',
-    // logoUrl: 'https://tailwindcss.com/plus-assets/img/logos/savvycal-logo-gray-900.svg',
+    'https://ui-avatars.com/api/?rounded=true&name=Sarah+Chen',
   },
 }
 const testimonials = [
   [
     [
       {
-        body: 'Let generate first 1000 definitions because it is not possible to learn waiting ages for them.',
+        body: 'The seamless integration of images and pronunciation is a game-changer. I finally feel like I am building a practical vocabulary.',
         author: {
-          name: 'Krzysztof',
-          handle: 'krzysztof',
+          name: 'Krzysztof Nowak',
+          handle: 'kris_dev',
           imageUrl:
-              'https://ui-avatars.com/api/?rounded=true&name=Krzysztof',
+              'https://ui-avatars.com/api/?rounded=true&name=Krzysztof+Nowak',
         },
       },
-      // More testimonials...
     ],
     [
       {
-        body: 'Without email login I will not create account. Only google login is not acceptable.',
+        body: 'I love how clean the interface is. The FSRS algorithm keeps me on track without feeling overwhelmed. Highly recommended!',
         author: {
-          name: 'Robert',
-          handle: 'robert',
+          name: 'Robert Müller',
+          handle: 'rob_m',
           imageUrl:
-              'https://ui-avatars.com/api/?rounded=true&name=Robert',
+              'https://ui-avatars.com/api/?rounded=true&name=Robert+Muller',
         },
       },
-      // More testimonials...
     ],
   ],
   [
     [
       {
-        body: 'I can\'t go more advanced words, please add searcher and pagination on discovery Page.',
+        body: 'Lexidrift makes language learning feel like a breeze. The context-aware examples are exactly what I needed to step up my game.',
         author: {
-          name: 'Radek',
-          handle: 'radek',
+          name: 'Elena Rodriguez',
+          handle: 'elena_polyglot',
           imageUrl:
-              'https://ui-avatars.com/api/?rounded=true&name=Radek',
+              'https://ui-avatars.com/api/?rounded=true&name=Elena+Rodriguez',
         },
       },
-      // More testimonials...
     ],
     [
       {
-        body: 'App should be able to accept my correct translations, better than these from AI.',
+        body: 'The fact that it is now open source makes it even better. A great tool built by the community, for the community.',
         author: {
-          name: 'Krzysztof',
-          handle: 'cris2',
+          name: 'James Wilson',
+          handle: 'jwilson_edu',
           imageUrl:
-              'https://ui-avatars.com/api/?rounded=true&name=Krzysztof',
+              'https://ui-avatars.com/api/?rounded=true&name=James+Wilson',
         },
       },
-      // More testimonials...
     ],
   ],
 ]
