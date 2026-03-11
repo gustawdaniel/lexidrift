@@ -1,35 +1,35 @@
 import z from "zod";
 import { getDbName } from "./getDbName.ts";
 
-// Define the configuration schema
-const configSchema = z.object({
-    MONGO_URI: z.string(),
-    MONGO_DB_NAME: z.string().default("lexi_drift"),
-    NODE_ENV: z.enum(['test', 'e2e', 'development', 'production']).default('production'),
-});
-
 const envVars = {
     ...import.meta.env,
     ...((globalThis as any).process?.env || {}),
 };
 
+// Define the configuration schema
+const configSchema = z.object({
+    MONGO_URI: z.string({
+        required_error: "FATAL ERROR: MONGO_URI is missing! Please provide it via environment variables (e.g., in Cloudflare Pages settings).",
+    }).min(1, "FATAL ERROR: MONGO_URI is empty!"),
+    MONGO_DB_NAME: z.string().default("lexi_drift"),
+    NODE_ENV: z.enum(['test', 'e2e', 'development', 'production']).default('production'),
+});
+
 const result = configSchema.safeParse(envVars);
 
 if (!result.success) {
-    console.warn("⚠️ Configuration validation issues detected:");
-    console.warn(JSON.stringify(result.error.format(), null, 2));
-    console.info("Available env keys (non-sensitive):", Object.keys(envVars).filter(k =>
-        !/AUTH|SECRET|TOKEN|KEY|PASS/i.test(k)
-    ));
+    const error = result.error.format();
+    if (error.MONGO_URI) {
+        throw new Error(`\n\n❌ ${error.MONGO_URI._errors.join(", ")}\n`);
+    }
+    throw new Error(`Configuration error: ${JSON.stringify(error, null, 2)}`);
 }
 
-// Use a fallback for build time if MONGO_URI is missing to avoid hard crash during static generation.
-// This allows the build to finish even if the database variables are not exposed to the build environment.
-const MONGO_URI = envVars.MONGO_URI as string || "mongodb://missing_uri_placeholder:27017/lexi_drift";
+const env = result.data;
 
 export const config = {
     mongo: {
-        uri: MONGO_URI,
-        dbName: MONGO_URI !== "mongodb://missing_uri_placeholder:27017/lexi_drift" ? getDbName(MONGO_URI) : "lexi_drift",
+        uri: env.MONGO_URI,
+        dbName: getDbName(env.MONGO_URI),
     },
 }

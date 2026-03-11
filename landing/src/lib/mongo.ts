@@ -16,10 +16,6 @@ interface Word {
 const WORDS_LIMIT = 20000;
 
 export async function getWords(filter: { lang: Language }): Promise<Word[]> {
-    if (config.mongo.uri.includes("missing_uri_placeholder")) {
-        console.warn("⚠️ getWords called without a valid MONGO_URI. Skipping database fetch.");
-        return [];
-    }
     try {
         await client.connect();
         const database = client.db(dbName);
