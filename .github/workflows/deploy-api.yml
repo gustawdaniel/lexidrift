@@ -1,0 +1,76 @@
+name: Deploy API Docker Image
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'api/**'
+      - '.github/workflows/deploy-api.yml'
+
+env:
+  DOCKER_IMAGE: main/lexi-drift-api
+  DOCKER_REGISTRY: registry.digitalocean.com
+  SERVER_IP: 188.245.164.95
+  DIR: api.lexidrift.com
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to DigitalOcean Registry
+        run: echo "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" ${{ env.DOCKER_REGISTRY }} --password-stdin
+
+      - name: Build and Push Docker Image
+        working-directory: ./api
+        run: |
+          docker build --platform linux/amd64 -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }} .
+          docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}
+
+      - name: Install Infisical CLI
+        run: |
+          curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | sudo -E bash
+          sudo apt-get update && sudo apt-get install -y infisical
+
+      - name: Authenticate with Infisical and Create .env
+        working-directory: ./api
+        env:
+          INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
+          INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
+        run: |
+          INFISICAL_TOKEN=$(infisical login --method=universal-auth \
+            --client-id=$INFISICAL_CLIENT_ID \
+            --client-secret=$INFISICAL_CLIENT_SECRET \
+            --plain --silent \
+            --domain https://infisical.preciselab.space)
+
+          # Mask the INFISICAL_TOKEN in logs
+          echo "::add-mask::${INFISICAL_TOKEN}"
+
+          echo "INFISICAL_TOKEN=$INFISICAL_TOKEN" > .env
+        shell: bash
+
+      - name: Copy files to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "api/docker-compose.yml,api/.env"
+          target: "/root/${{ env.DIR }}/"
+          strip_components: 1
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            mkdir -p /root/${{ env.DIR }}
+            docker pull ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}
+            cd /root/${{ env.DIR }} && docker compose up -d --remove-orphans

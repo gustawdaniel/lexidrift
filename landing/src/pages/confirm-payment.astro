@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ConfirmPaymentComponent from '../components/ConfirmPayment.vue';
+import Navigation from '../components/Navigation.vue';
+import Footer from '../components/Footer.vue';
+---
+
+<Layout>
+    <Navigation client:load/>
+    <ConfirmPaymentComponent client:load/>
+    <Footer client:load/>
+<Layout/>

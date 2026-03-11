@@ -1,0 +1,32 @@
+{
+  "name": "data",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "migration:new": "infisical run --env=dev --path=/apps/data -- tsx mongo-migrate.ts new",
+    "migration:dev:up": "infisical run --env=dev --path=/apps/data -- tsx mongo-migrate.ts up",
+    "migration:dev:down": "infisical run --env=dev --path=/apps/data -- tsx mongo-migrate.ts down -l",
+    "migration:e2e:up": "infisical run --env=e2e --path=/apps/data -- tsx mongo-migrate.ts up",
+    "migration:e2e:down": "infisical run --env=e2e --path=/apps/data -- tsx mongo-migrate.ts down -l",
+    "migration:prod:up": "infisical run --env=prod --path=/apps/data -- tsx mongo-migrate.ts up",
+    "migration:prod:down": "infisical run --env=prod --path=/apps/data -- tsx mongo-migrate.ts down -l",
+    "test": "infisical run --env=dev --path=/apps/data -- echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier . --write"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee",
+  "dependencies": {
+    "mongo-migrate-ts": "^1.6.2",
+    "mongodb": "^6.11.0",
+    "ofetch": "^1.4.1",
+    "tsx": "^4.19.2",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "prettier": "3.5.2"
+  }
+}

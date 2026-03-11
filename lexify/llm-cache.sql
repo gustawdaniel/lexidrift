@@ -1,0 +1,13 @@
+PRAGMA foreign_keys=OFF;BEGIN TRANSACTION;CREATE TABLE IF NOT EXISTS llm_requests (
+md5 TEXT PRIMARY KEY,
+input TEXT NOT NULL,
+model TEXT NOT NULL,
+output TEXT NOT NULL,
+finishReason TEXT NOT NULL,
+promptTokens INTEGER NOT NULL,
+completionTokens INTEGER NOT NULL,
+totalTokens INTEGER NOT NULL,
+requestTime INTEGER NOT NULL,
+durationMs INTEGER NOT NULL
+);
+COMMIT;

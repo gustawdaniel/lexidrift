@@ -1,0 +1,7 @@
+services:
+  imagify:
+    image: registry.digitalocean.com/main/lexi-drift-imagify
+    ports:
+      - "5000:5000"
+    environment:
+      - INFISICAL_TOKEN

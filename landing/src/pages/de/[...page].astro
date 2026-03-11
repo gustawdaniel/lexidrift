@@ -1,0 +1,17 @@
+---
+import {getWords} from "../../lib/mongo";
+import WordsList from "../../components/WordsList.astro";
+import type {Language} from "../../lib/types";
+import Layout from "../../layouts/Layout.astro";
+export const lang: Language = "de";
+
+export async function getStaticPaths({paginate}) {
+    const words = await getWords({lang});
+    return paginate(words, {pageSize: 10});
+}
+const {page} = Astro.props;
+---
+
+<Layout>
+    <WordsList lang={lang} page={page}/>
+</Layout>

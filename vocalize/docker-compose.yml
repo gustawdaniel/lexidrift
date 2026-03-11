@@ -1,0 +1,7 @@
+services:
+  vocalize:
+    image: registry.digitalocean.com/main/lexi-drift-vocalize
+    ports:
+      - "4000:4000"
+    environment:
+      - INFISICAL_TOKEN

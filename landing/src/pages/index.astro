@@ -1,0 +1,34 @@
+---
+import Layout from '../layouts/Layout.astro';
+import {languages} from "../lib/languages";
+
+import Navigation from '../components/Navigation.vue';
+import HeroSection from '../components/HeroSection.vue';
+import BentoGrid from '../components/BentoGrid.vue';
+import FeatureSection from '../components/FeatureSection.vue';
+import Testimonials from '../components/Testimonials.vue';
+import Pricing from '../components/Pricing.vue';
+import Faq from '../components/Faq.vue';
+import Timeline from '../components/Timeline.vue';
+import Cta from '../components/Cta.vue';
+import Footer from '../components/Footer.vue';
+---
+
+<Layout>
+	<Navigation client:load/>
+	<HeroSection client:load/>
+	<BentoGrid client:load/>
+	<FeatureSection client:load/>
+	<Testimonials client:load/>
+	<Pricing client:load/>
+	<Faq client:load/>
+	<Timeline client:load/>
+	<Cta client:load/>
+	<Footer client:load/>
+
+	<!--<ul class="bg-red-400">-->
+	<!--	{languages.map(lang => (-->
+	<!--		<li><a href={`/${lang}`}>{lang}</a></li>-->
+	<!--	))}-->
+	<!--</ul>-->
+</Layout>

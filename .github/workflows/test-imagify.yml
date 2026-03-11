@@ -1,0 +1,30 @@
+name: Test Imagify
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'imagify/**'
+      - '.github/workflows/test-imagify.yml'
+
+jobs:
+  pnpm-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9 # Replace with your preferred PNPM version
+
+      - name: Install dependencies
+        working-directory: ./imagify
+        run: pnpm install
+
+      - name: Run tests
+        working-directory: ./imagify
+        run: pnpm test

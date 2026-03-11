@@ -1,0 +1,7 @@
+services:
+  api:
+    image: registry.digitalocean.com/main/lexi-drift-api
+    ports:
+      - "4747:4747"
+    environment:
+      - INFISICAL_TOKEN

@@ -1,0 +1,273 @@
+---
+import type {Language, Word} from "../lib/types";
+import AppNav from "./AppNav.astro";
+import Pagintaion from "./Pagintaion.astro";
+
+interface Props {
+    lang: Language;
+    page: {
+        data: Word[];
+        start: number,
+        end: number,
+        size: number,
+        total: number,
+        currentPage: number,
+        lastPage: number,
+        url: {
+            current: string,
+            next: string | undefined,
+            prev: string,
+            first: string,
+            last: string | undefined
+        }
+    };
+}
+
+const {page, lang} = Astro.props;
+---
+
+<AppNav/>
+
+<h1 class="text-4xl container mx-auto mb-4">{lang} {page.currentPage}</h1>
+<section id="words-list" class="container mx-auto">
+    <main class="space-y-2">
+        {page.data.map((word: Word) =>
+                <div class="rounded-md border px-4 py-1 font-mono text-sm">
+                    {word.word} - {word.count}
+                    | {word.correctness === true ? 'yes' : (word.correctness === false ? 'no' :
+                        <button  data-action="check" data-lang={lang} data-word={word.word}>C</button>)} |
+                    <button data-action="define" data-lang={lang} data-word={word.word}>D</button>
+                </div>
+        )}
+    </main>
+</section>
+
+<br>
+
+<script is:inline>
+    const lexifyUrl = 'https://lexify.lexidrift.com';
+    // const lexifyUrl = 'http://localhost:3000';
+
+    const vocalizeUrl = 'https://vocalize.lexidrift.com';
+    // const vocalizeUrl = 'http://127.0.0.1:4000';
+
+    const imagifyUrl = 'https://imagify.lexidrift.com';
+
+    // const imagifyUrl = 'http://127.0.0.1:5000';
+
+    function renderWordDefinition(definitionRecord, lang, startTimer) {
+        return `<table>
+<thead>
+    <tr>
+        <th style="font-weight: bold">${definitionRecord.word}</th>
+        <th style="font-weight: bold">Translation</th>
+        <th></th>
+    </tr>
+</thead>
+<tbody>
+    ${['en', 'pl', 'de', 'ru', 'es'].map(lang => `<tr>
+        <td>${lang}</td>
+        <td>${definitionRecord.translation[lang]}</td>
+        <td>
+            <button data-action="speak" data-lang="${lang}" data-word="${definitionRecord.translation[lang]}">|></button>
+            <button data-action="speak-gtts" data-lang="${lang}" data-word="${definitionRecord.translation[lang]}">$></button>
+        </td>
+    </tr>`).join('')}
+</tbody>
+<thead>
+    <tr>
+        <th style="font-weight: bold">${definitionRecord.word}</th>
+        <th style="font-weight: bold">Definition</th>
+        <th></th>
+    </tr>
+</thead>
+<tbody>
+    ${['en', 'pl', 'de', 'ru', 'es'].map(lang => `<tr>
+        <td>${lang}</td>
+        <td>${definitionRecord.definition[lang]}</td>
+        <td>
+            <button data-action="speak" data-lang="${lang}" data-word="${definitionRecord.definition[lang]}">|></button>
+            <button data-action="speak-gtts" data-lang="${lang}" data-word="${definitionRecord.definition[lang]}">$></button>
+        </td>
+    </tr>`).join('')}
+</tbody>
+<thead>
+    <tr>
+        <th style="font-weight: bold">${definitionRecord.word}</th>
+        <th style="font-weight: bold">Examples</th>
+        <th></th>
+    </tr>
+</thead>
+<tbody>
+    ${definitionRecord.examples.map((example, index) => `
+    <tr>
+        <th style="font-weight: bold">#${index + 1}</th>
+        <th style="font-weight: bold">${example.part_of_speech}</th>
+        <th></th>
+    </tr>
+        ${['en', 'pl', 'de', 'ru', 'es'].map(lang => `<tr>
+            <td>${lang}</td>
+            <td>${example[lang]}</td>
+            <td>
+                <button data-action="speak" data-lang="${lang}" data-word="${example[lang]}">|></button>
+                <button data-action="speak-gtts" data-lang="${lang}" data-word="${example[lang]}">$></button>
+            </td>
+        </tr>`).join('')}
+    <tr>
+        <th style="font-weight: bold">prompt</th>
+        <th style="font-weight: bold">${example.image_prompt}</th>
+        <th>
+                <button data-action="imagify" data-prompt="${example.image_prompt}" data-style="cyberpunk magenta">img</button>
+        </th>
+    </tr>`
+        ).join('')}
+</tbody>
+</table>`
+    }
+
+    async function check(lang, word, event, startTimer) {
+        const res = await fetch(lexifyUrl + '/check', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({lang, word})
+        });
+        if (res.ok) {
+            const data = await res.json();
+
+            console.log(data);
+
+            if (data.success) {
+                event.target.outerHTML = (data.correctness.correctness ? 'yes' : 'no') + '|' + (Date.now() - startTimer) + 'ms';
+            }
+        }
+    }
+
+    async function define(lang, word, event, startTimer) {
+        const res = await fetch(lexifyUrl + '/define', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({lang, word, "style": "wordup"})
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            console.log(data);
+
+            if (data.success) {
+                event.target.outerHTML = renderWordDefinition(data.definition, lang, startTimer);
+            }
+        }
+    }
+
+    function getVoiceByLang(voices, lang) {
+        const possibleVoices = voices.filter((params) => params.lang.startsWith(lang));
+
+        if (possibleVoices.length === 0) {
+            throw new Error(`No voice for ${lang}`)
+        }
+
+        if (lang === 'en' && possibleVoices.every((e) => e.voiceURI.startsWith('urn:moz-tts:osx:com.apple'))) {
+            return possibleVoices.find(v => v.name === 'Daniel');
+        }
+
+        if (lang === 'es' && possibleVoices.every((e) => e.voiceURI.startsWith('urn:moz-tts:osx:com.apple'))) {
+            return possibleVoices.find(v => v.name === 'Mónica');
+        }
+
+        return possibleVoices[0]
+    }
+
+    // on init first call getVoices gives empty array
+    if ('speechSynthesis' in window) {
+        speechSynthesis.getVoices()
+    }
+
+    async function speak(lang, word, event, startTimer) {
+        if ('speechSynthesis' in window) {
+            return new Promise((resolve, reject) => {
+                const msg = new SpeechSynthesisUtterance();
+                msg.text = word;
+                // msg.volume = 1;
+                // msg.rate = 1.0;
+                // msg.pitch = 1;
+
+                const voices = speechSynthesis.getVoices();
+
+                msg.voice = getVoiceByLang(voices, lang);
+
+                console.log(msg.voice);
+
+                msg.onend = resolve;
+                msg.onerror = reject;
+
+                window.speechSynthesis.speak(msg);
+            })
+        }
+    }
+
+    async function speakGTTS(lang, text, event, startTimer) {
+        const link = await fetch(`${vocalizeUrl}/speak`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({lang, text, style: 'gtts'})
+            }).then(res => res.json());
+        console.log('res', link);
+        const audioBlob = await fetch(link.location).then(res => res.blob());
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audio = new Audio(audioUrl);
+        await audio.play();
+    }
+
+    async function imagify(prompt, style, event, startTimer) {
+        const link = await fetch(`${imagifyUrl}/imagine`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({prompt, style})
+            }).then(res => res.json());
+        console.log('res', link);
+        const img = document.createElement('img');
+        img.src = link.image;
+        img.style.width = '100%';
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 3;
+        td.appendChild(img);
+        tr.appendChild(td);
+        // event.target.parentElement.parentElement.parentElement.parentElement.appendChild(tr);
+        event.target.parentElement.parentElement.insertAdjacentElement('afterend',tr);
+    }
+
+    document.addEventListener('click', async (e) => {
+        const {action, lang, word, prompt, style} = e.target.dataset;
+
+        let startTimer = Date.now();
+
+        if (action === 'check') {
+            await check(lang, word, e, startTimer);
+        }
+        if (action === 'define') {
+            await define(lang, word, e, startTimer);
+        }
+        if (action === 'speak') {
+            await speak(lang, word, e, startTimer);
+        }
+        if (action === 'speak-gtts') {
+            await speakGTTS(lang, word, e, startTimer);
+        }
+        if (action === 'imagify') {
+            await imagify(prompt, style, e, startTimer);
+        }
+    });
+</script>
+
+<Pagintaion page={page} lang={lang}/>

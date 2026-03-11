@@ -1,0 +1,35 @@
+{
+  "name": "lexify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "infisical run --env=dev --path=/apps/lexify -- tsx watch src/index.ts api",
+    "test": "vitest run",
+    "check": "pnpm --package=typescript dlx tsc --strict --noEmit",
+    "build": "npx tsup src/index.ts",
+    "serve:dev": "infisical run --env=dev --path=/apps/lexify -- node dist/index.js",
+    "serve:prod": "infisical run --domain https://infisical.preciselab.space --projectId 28d53423-b8f5-499f-b76c-bc714da0e8d6 --env=prod --path=/apps/lexify -- node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee",
+  "dependencies": {
+    "@fastify/cors": "^10.0.1",
+    "@influxdata/influxdb-client": "^1.35.0",
+    "@libsql/client": "^0.14.0",
+    "dotenv": "^16.4.7",
+    "fastify": "^5.1.0",
+    "mongodb": "^6.11.0",
+    "openai": "^4.73.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

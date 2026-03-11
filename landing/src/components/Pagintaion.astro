@@ -1,0 +1,29 @@
+---
+import type {Language,Word} from "../lib/types";
+interface Props {
+    lang: Language;
+    page: {
+        start: number,
+        end: number,
+        size: number,
+        total: number,
+        currentPage: number,
+        lastPage: number,
+        url: {
+            current: string,
+            next: string | undefined,
+            prev: string,
+            first: string,
+            last: string | undefined
+        }
+    };
+}
+
+const { page, lang } = Astro.props;
+---
+
+<nav>
+    <a href={page.url.prev}><button disabled={!page.url.prev}>Prev</button></a>
+    <span>Page {page.currentPage} of {page.lastPage}</span>
+    <a href={page.url.next}><button disabled={!page.url.next}>Next</button></a>
+</nav>

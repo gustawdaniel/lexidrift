@@ -1,0 +1,28 @@
+---
+import "../styles/global.css";
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Lexi Drift</title>
+
+		<style>
+			html,
+			body {
+				margin: 0;
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<slot />
+
+		<script defer src="https://cloud.umami.is/script.js" data-website-id="2c612f00-c034-4f66-b34c-9d537bd27f94"></script>
+	</body>
+</html>

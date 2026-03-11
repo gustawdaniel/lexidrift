@@ -1,0 +1,14 @@
+---
+import {languages} from "../lib/languages";
+---
+
+
+<nav class="container py-2 flex gap-2">
+    {languages.map(lang => (
+            <a href={`/${lang}`}>
+                <button>
+                    {lang}
+                </button>
+            </a>
+    ))}
+</nav>

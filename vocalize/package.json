@@ -1,0 +1,34 @@
+{
+  "name": "lexidrift-vocalize",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "infisical run --env=dev --path=/apps/vocalize -- tsx watch src/index.ts api",
+    "test": "vitest run",
+    "check": "pnpm --package=typescript dlx tsc --strict --noEmit",
+    "build": "npx tsup src/index.ts --format esm",
+    "serve:dev": "infisical run --env=dev --path=/apps/vocalize -- node dist/index.js",
+    "serve:prod": "infisical run --domain https://infisical.preciselab.space --projectId 28d53423-b8f5-499f-b76c-bc714da0e8d6 --env=prod --path=/apps/vocalize -- node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee",
+  "devDependencies": {
+    "@influxdata/influxdb-client": "^1.35.0",
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8",
+    "zod": "^3.24.1"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.717.0",
+    "@fastify/cors": "^10.0.1",
+    "@ilawy/gtts": "npm:@jsr/ilawy__gtts@^1.0.2",
+    "fastify": "^5.2.0"
+  }
+}

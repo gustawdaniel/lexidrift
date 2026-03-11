@@ -1,0 +1,62 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout>
+    Auth
+
+    <script type="module" is:inline>
+        // import LogtoClient from 'https://cdn.jsdelivr.net/npm/@logto/browser@latest/+esm';
+        //
+        // const logtoClient = new LogtoClient({
+        //     // endpoint: 'https://cd8va6.logto.app/',
+        //     // appId: 'ry8euspu5zgmwyzjqe2yj',
+        //     endpoint: 'https://cd8va6.logto.app/',
+        //     appId: 'hz36r285t6dbzxgwyp4t8',
+        // });
+        //
+        // window.logtoClient = logtoClient;
+        function getCookie(name) {
+            const cookies = document.cookie.split('; '); // Split into key=value pairs
+            for (let cookie of cookies) {
+                const [key, value] = cookie.split('='); // Split each pair into key and value
+                if (key === name) {
+                    return decodeURIComponent(value); // Decode and return the value
+                }
+            }
+            return null; // Return null if the cookie is not found
+        }
+
+        function parseJwt(token) {
+            try {
+                // Split the token into parts
+                const base64Url = token.split('.')[1];
+                if (!base64Url) {
+                    throw new Error('Invalid token format');
+                }
+
+                // Decode the Base64Url to a JSON string
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(
+                    atob(base64)
+                        .split('')
+                        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                        .join('')
+                );
+
+                // Parse and return the JSON object
+                return JSON.parse(jsonPayload);
+            } catch (error) {
+                console.error('Error parsing JWT:', error.message);
+                return null;
+            }
+        }
+
+        // document.cookie
+        const c = getCookie('logtoCookies')
+        console.log(c);
+        if(c) {
+            const jwt = parseJwt(c);
+            console.log(jwt);
+        }
+    </script>
+</Layout>

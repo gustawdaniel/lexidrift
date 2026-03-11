@@ -1,0 +1,46 @@
+name: Deploy Imagify Docker Image
+
+on:
+  workflow_run:
+    workflows:
+      - Test Imagify
+    types:
+      - completed
+
+env:
+  DOCKER_IMAGE: main/lexi-drift-imagify
+  DOCKER_REGISTRY: registry.digitalocean.com
+  SERVER_IP: 188.245.164.95
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Log in to DigitalOcean Container Registry
+      - name: Log in to DigitalOcean Registry
+        run: echo "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" ${{ env.DOCKER_REGISTRY }} --password-stdin
+
+      # Build the Docker image
+      - name: Build Docker Image
+        working-directory: ./imagify
+        run: docker build --platform linux/amd64 -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }} .
+
+      # Push the Docker image
+      - name: Push Docker Image
+        run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}
+
+      # SSH into server and pull the Docker image
+      - name: Deploy on Server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+             docker pull ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}

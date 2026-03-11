@@ -1,0 +1,7 @@
+services:
+  lexify:
+    image: registry.digitalocean.com/main/lexi-drift-lexify
+    ports:
+      - "3000:3000"
+    environment:
+      - INFISICAL_TOKEN

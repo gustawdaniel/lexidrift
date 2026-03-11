@@ -1,0 +1,8 @@
+services:
+  app:
+    image: registry.digitalocean.com/main/lexi-drift-app
+    ports:
+      - "7000:7000"
+#    command: ["pnpm", "serve:prod"]
+    environment:
+      - INFISICAL_TOKEN
