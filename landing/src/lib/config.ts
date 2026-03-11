@@ -21,7 +21,8 @@ if (!result.success) {
     const error = result.error.format();
 
     // DEBUG: Log all available keys to see what's actually there
-    console.log("🔍 DEBUG: Available environment variable keys:", Object.keys(envVars));
+    console.log("🔍 DEBUG: Astro env keys (import.meta.env):", Object.keys(import.meta.env));
+    console.log("🔍 DEBUG: System env keys (process.env):", Object.keys((globalThis as any).process?.env || {}));
 
     if (error.MONGO_URI) {
         throw new Error(`\n\n❌ ${error.MONGO_URI._errors.join(", ")}\n`);
