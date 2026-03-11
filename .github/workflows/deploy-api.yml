@@ -9,6 +9,7 @@ on:
       - '.github/workflows/deploy-api.yml'
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
   DOCKER_IMAGE: main/lexi-drift-api
   DOCKER_REGISTRY: registry.digitalocean.com
   SERVER_IP: 188.245.164.95

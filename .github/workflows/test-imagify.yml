@@ -7,6 +7,8 @@ on:
     paths:
       - 'imagify/**'
       - '.github/workflows/test-imagify.yml'
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   pnpm-test:
