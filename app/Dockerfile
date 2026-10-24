@@ -6,7 +6,7 @@ ENV VITE_LEXIFY_URL=https://lexify.lexidrift.com
 ENV GOOGLE_CLIENT_ID=659003851076-p3f3osumj0la8ug98t11kf7ihek003bg.apps.googleusercontent.com
 
 # Enable pnpm via npm
-RUN npm install -g pnpm
+RUN npm install -g pnpm@9.15.4
 
 # Set working directory
 WORKDIR /app
@@ -25,7 +25,7 @@ RUN pnpm build
 FROM node:26-alpine
 
 # Enable pnpm in runtime stage for managing dependencies (optional)
-RUN npm install -g pnpm
+RUN npm install -g pnpm@9.15.4
 
 # Set working directory
 WORKDIR /app
@@ -35,9 +35,9 @@ COPY --from=builder /app/.output ./.output
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
-RUN apk add --no-cache bash curl && curl -1sLf \
-'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.alpine.sh' | bash \
-&& apk add infisical
+RUN apk add --no-cache bash curl tar && \
+    curl -sSL https://github.com/Infisical/infisical/releases/download/infisical-cli%2Fv0.38.0/infisical_0.38.0_linux_amd64.tar.gz | tar -xz -C /usr/bin infisical && \
+    chmod +x /usr/bin/infisical
 
 # Start the application
 CMD ["pnpm", "serve:prod"]

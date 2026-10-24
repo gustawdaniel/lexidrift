@@ -23,9 +23,9 @@ FROM debian:latest
 WORKDIR /app
 
 # Install dependencies in a single step
-RUN apt update && apt install -y bash curl ffmpeg && \
-    curl -1sLf 'https://dl.cloudsmith.io/public/infisical/infisical-cli/setup.deb.sh' | bash && \
-    apt-get update && apt-get install -y infisical
+RUN apt update && apt install -y bash curl ffmpeg tar && \
+    curl -sSL https://github.com/Infisical/infisical/releases/download/infisical-cli%2Fv0.38.0/infisical_0.38.0_linux_amd64.tar.gz | tar -xz -C /usr/bin infisical && \
+    chmod +x /usr/bin/infisical
 
 # Copy compiled binary
 #COPY --from=build /opt/target/release/main .
