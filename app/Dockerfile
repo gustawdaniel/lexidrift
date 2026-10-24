@@ -1,12 +1,12 @@
 # Stage 1: Build
-FROM node:22-alpine AS builder
+FROM node:26-alpine AS builder
 
 ENV VITE_API_URL=https://api.lexidrift.com
 ENV VITE_LEXIFY_URL=https://lexify.lexidrift.com
 ENV GOOGLE_CLIENT_ID=659003851076-p3f3osumj0la8ug98t11kf7ihek003bg.apps.googleusercontent.com
 
-# Enable pnpm via corepack
-RUN corepack enable pnpm
+# Enable pnpm via npm
+RUN npm install -g pnpm
 
 # Set working directory
 WORKDIR /app
@@ -22,10 +22,10 @@ COPY . .
 RUN pnpm build
 
 # Stage 2: Runtime
-FROM node:22-alpine
+FROM node:26-alpine
 
 # Enable pnpm in runtime stage for managing dependencies (optional)
-RUN corepack enable pnpm
+RUN npm install -g pnpm
 
 # Set working directory
 WORKDIR /app
