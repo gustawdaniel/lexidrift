@@ -40,7 +40,7 @@ ssh root@188.245.164.95
 call
 
 ```
-docker pull registry.digitalocean.com/main/lexi-drift-lexify
+docker pull registry.preciselab.space/lexi-drift-lexify
 ```
 
 then

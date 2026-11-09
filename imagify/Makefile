@@ -1,8 +1,8 @@
 build:
-	docker build --platform linux/amd64 -t registry.digitalocean.com/main/lexi-drift-imagify .
+	docker build --platform linux/amd64 -t registry.preciselab.space/lexi-drift-imagify .
 
 push:
-	docker push registry.digitalocean.com/main/lexi-drift-imagify
+	docker push registry.preciselab.space/lexi-drift-imagify
 
 deploy: build push
 

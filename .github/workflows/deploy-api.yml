@@ -10,8 +10,8 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  DOCKER_IMAGE: main/lexi-drift-api
-  DOCKER_REGISTRY: registry.digitalocean.com
+  DOCKER_IMAGE: lexi-drift-api
+  DOCKER_REGISTRY: registry.preciselab.space
   SERVER_IP: 188.245.164.95
   DIR: api.lexidrift.com
 
@@ -23,8 +23,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Log in to DigitalOcean Registry
-        run: echo "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" ${{ env.DOCKER_REGISTRY }} --password-stdin
+      - name: Log in to private registry
+        run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u "${{ secrets.REGISTRY_USER }}" ${{ env.DOCKER_REGISTRY }} --password-stdin
 
       - name: Build and Push Docker Image
         working-directory: ./api
@@ -73,5 +73,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             mkdir -p /root/${{ env.DIR }}
+            echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ env.DOCKER_REGISTRY }} -u "${{ secrets.REGISTRY_USER }}" --password-stdin
             docker pull ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}
             cd /root/${{ env.DIR }} && docker compose up -d --remove-orphans

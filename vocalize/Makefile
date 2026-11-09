@@ -1,8 +1,8 @@
 build:
-	docker build --platform linux/amd64 -t registry.digitalocean.com/main/lexi-drift-vocalize .
+	docker build --platform linux/amd64 -t registry.preciselab.space/lexi-drift-vocalize .
 
 push:
-	docker push registry.digitalocean.com/main/lexi-drift-vocalize
+	docker push registry.preciselab.space/lexi-drift-vocalize
 
 deploy: build push
 

@@ -1,6 +1,6 @@
 services:
   imagify:
-    image: registry.digitalocean.com/main/lexi-drift-imagify
+    image: registry.preciselab.space/lexi-drift-imagify
     ports:
       - "5000:5000"
     environment:

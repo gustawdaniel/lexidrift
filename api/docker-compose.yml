@@ -1,6 +1,6 @@
 services:
   api:
-    image: registry.digitalocean.com/main/lexi-drift-api
+    image: registry.preciselab.space/lexi-drift-api
     ports:
       - "4747:4747"
     environment:

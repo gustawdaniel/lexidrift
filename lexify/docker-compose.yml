@@ -1,6 +1,6 @@
 services:
   lexify:
-    image: registry.digitalocean.com/main/lexi-drift-lexify
+    image: registry.preciselab.space/lexi-drift-lexify
     ports:
       - "3000:3000"
     environment:
