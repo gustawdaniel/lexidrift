@@ -32,5 +32,10 @@
     "together-ai": "^0.10.0",
     "vitest": "^2.1.8",
     "zod": "^3.24.1"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "buffer-equal-constant-time@1.0.1": "patches/buffer-equal-constant-time@1.0.1.patch"
+    }
   }
 }

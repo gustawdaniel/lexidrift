@@ -1,0 +1,56 @@
+name: Deploy Vocalize Docker Image
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'vocalize/**'
+      - '.github/workflows/deploy-vocalize.yml'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  DOCKER_IMAGE: lexi-drift-vocalize
+  DOCKER_REGISTRY: registry.preciselab.space
+  SERVER_IP: 188.245.164.95
+  DIR: vocalize.lexidrift.com
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to private registry
+        run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u "${{ secrets.REGISTRY_USER }}" ${{ env.DOCKER_REGISTRY }} --password-stdin
+
+      - name: Build and Push Docker Image
+        working-directory: ./vocalize
+        run: |
+          docker build --platform linux/amd64 -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }} .
+          docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}
+
+      - name: Copy files to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "vocalize/docker-compose.yml"
+          target: "/root/${{ env.DIR }}/"
+          strip_components: 1
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            mkdir -p /root/${{ env.DIR }}
+            touch /root/${{ env.DIR }}/.env
+            echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ env.DOCKER_REGISTRY }} -u "${{ secrets.REGISTRY_USER }}" --password-stdin
+            docker pull ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}
+            cd /root/${{ env.DIR }} && docker compose up -d --remove-orphans

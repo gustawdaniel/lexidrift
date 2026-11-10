@@ -1,0 +1,15 @@
+diff --git a/index.js b/index.js
+index 4b0ce4b..bcb4f7e 100644
+--- a/index.js
++++ b/index.js
+@@ -1,7 +1,9 @@
+ /*jshint node:true */
+ 'use strict';
+ var Buffer = require('buffer').Buffer; // browserify
+-var SlowBuffer = require('buffer').SlowBuffer;
++// Node.js 26 removed buffer.SlowBuffer — bez fallbacku ten require wywala się przy
++// starcie (jwa -> buffer-equal-constant-time -> SlowBuffer.prototype.equal).
++var SlowBuffer = require('buffer').SlowBuffer || Buffer;
+ 
+ module.exports = bufferEq;
+ 

@@ -25,7 +25,10 @@
     "vitest": "^3.0.8"
   },
   "pnpm": {
-    "neverBuiltDependencies": []
+    "neverBuiltDependencies": [],
+    "patchedDependencies": {
+      "buffer-equal-constant-time@1.0.1": "patches/buffer-equal-constant-time@1.0.1.patch"
+    }
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.758.0",
