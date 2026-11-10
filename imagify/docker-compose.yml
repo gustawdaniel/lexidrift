@@ -1,3 +1,4 @@
+# deploy test 2026-11-10 — weryfikacja automatycznego restartu po zmianie
 services:
   imagify:
     image: registry.preciselab.space/lexi-drift-imagify
