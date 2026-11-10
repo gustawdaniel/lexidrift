@@ -32,36 +32,13 @@ jobs:
           docker build --platform linux/amd64 -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }} .
           docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}
 
-      - name: Install Infisical CLI
-        run: |
-          curl -sSL https://github.com/Infisical/infisical/releases/download/infisical-cli%2Fv0.38.0/infisical_0.38.0_linux_amd64.tar.gz | sudo tar -xz -C /usr/bin infisical
-          sudo chmod +x /usr/bin/infisical
-
-      - name: Authenticate with Infisical and Create .env
-        working-directory: ./app
-        env:
-          INFISICAL_CLIENT_ID: ${{ secrets.INFISICAL_CLIENT_ID }}
-          INFISICAL_CLIENT_SECRET: ${{ secrets.INFISICAL_CLIENT_SECRET }}
-        run: |
-          INFISICAL_TOKEN=$(infisical login --method=universal-auth \
-            --client-id=$INFISICAL_CLIENT_ID \
-            --client-secret=$INFISICAL_CLIENT_SECRET \
-            --plain --silent \
-            --domain https://infisical.preciselab.space)
-
-          # Mask the INFISICAL_TOKEN in logs
-          echo "::add-mask::${INFISICAL_TOKEN}"
-
-          echo "INFISICAL_TOKEN=$INFISICAL_TOKEN" > .env
-        shell: bash
-
       - name: Copy files to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ env.SERVER_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "app/docker-compose.yml,app/.env"
+          source: "app/docker-compose.yml"
           target: "/root/${{ env.DIR }}/"
           strip_components: 1
 
@@ -73,6 +50,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             mkdir -p /root/${{ env.DIR }}
+            touch /root/${{ env.DIR }}/.env
             echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ env.DOCKER_REGISTRY }} -u "${{ secrets.REGISTRY_USER }}" --password-stdin
             docker pull ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}
             cd /root/${{ env.DIR }} && docker compose up -d --remove-orphans

@@ -31,7 +31,25 @@ pnpm install
 pnpm run dev
 ```
 
-*Note: You may need environment variables (`.env`) for some services to function fully. Refer to `.env.example` to see required keys.*
+Run the service with its environment loaded, e.g.:
+
+```bash
+set -a; . ./.env.dev; set +a     # zmienne z pliku .env.dev
+pnpm run dev
+```
+
+## Secrets
+
+Infisical is gone (2026-11-10). Every service reads a plain **`.env`** file:
+
+- **produkcja** — `/root/<usługa>.lexidrift.com/.env` na hoście `lexidrift` (600, poza gitem);
+  `docker-compose.yml` wczytuje go przez `env_file: [.env]`. CI **nie** wysyła sekretów —
+  wysyła tylko `docker-compose.yml` i robi `docker compose up -d`.
+- **lokalnie** — `.env.<usługa>` w katalogu repo (np. `.env.api`, `.env.imagify`), wpisy w `.gitignore`.
+  Skrypty `dev`/`test`/`migration:*` nie wstrzykują już zmiennych same z siebie — wczytaj plik
+  (`set -a; . ./.env.api; set +a`) albo użyj `node --env-file=.env.api`.
+- kopia wszystkich środowisk (dev/staging/prod) sprzed wyłączenia Infisicala:
+  `~/backups/2026-11-10-infisical/lexidrift/`.
 
 ## Contributing
 Contributions and Pull Requests are welcome!

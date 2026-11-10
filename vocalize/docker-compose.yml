@@ -3,5 +3,6 @@ services:
     image: registry.preciselab.space/lexi-drift-vocalize
     ports:
       - "4000:4000"
-    environment:
-      - INFISICAL_TOKEN
+    env_file:
+      - .env
+    restart: unless-stopped

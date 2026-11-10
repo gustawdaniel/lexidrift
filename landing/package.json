@@ -3,9 +3,9 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "infisical run --env=dev --path=/apps/landing -- astro dev",
-    "build:dev": "infisical run --env=dev --path=/apps/landing -- astro build",
-    "build:prod": "infisical run --env=prod --path=/apps/landing -- astro build",
+    "dev": "astro dev",
+    "build:dev": "astro build",
+    "build:prod": "astro build",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"

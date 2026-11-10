@@ -12,6 +12,7 @@ env:
   DOCKER_IMAGE: lexi-drift-imagify
   DOCKER_REGISTRY: registry.preciselab.space
   SERVER_IP: 188.245.164.95
+  DIR: imagify.lexidrift.com
 
 jobs:
   build-and-deploy:
@@ -36,13 +37,28 @@ jobs:
       - name: Push Docker Image
         run: docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}
 
-      # SSH into server and pull the Docker image
-      - name: Deploy on Server
+      # Wyślij docker-compose.yml na serwer (.env zostaje na serwerze, nie jedzie przez CI)
+      - name: Copy files to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ env.SERVER_IP }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "imagify/docker-compose.yml"
+          target: "/root/${{ env.DIR }}/"
+          strip_components: 1
+
+      # Deploy on server
+      - name: Deploy on server
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ env.SERVER_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-             echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ env.DOCKER_REGISTRY }} -u "${{ secrets.REGISTRY_USER }}" --password-stdin
-             docker pull ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}
+            mkdir -p /root/${{ env.DIR }}
+            touch /root/${{ env.DIR }}/.env
+            echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ env.DOCKER_REGISTRY }} -u "${{ secrets.REGISTRY_USER }}" --password-stdin
+            docker pull ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}
+            cd /root/${{ env.DIR }} && docker compose up -d --remove-orphans
+            docker image prune -f

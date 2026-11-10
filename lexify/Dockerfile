@@ -31,9 +31,6 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
-RUN apk add --no-cache bash curl tar && \
-    curl -sSL https://github.com/Infisical/infisical/releases/download/infisical-cli%2Fv0.38.0/infisical_0.38.0_linux_amd64.tar.gz | tar -xz -C /usr/bin infisical && \
-    chmod +x /usr/bin/infisical
 
 # Start the application
 CMD ["pnpm", "serve:prod"]

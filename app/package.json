@@ -3,12 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:prod": "infisical run --domain https://infisical.preciselab.space --projectId 28d53423-b8f5-499f-b76c-bc714da0e8d6 --env=prod --path=/apps/app -- nuxt build",
-    "build:dev": "infisical run --env=dev --path=/apps/app -- nuxt build",
-    "serve:prod": "infisical run --domain https://infisical.preciselab.space --projectId 28d53423-b8f5-499f-b76c-bc714da0e8d6 --env=prod --path=/apps/app -- node .output/server/index.mjs",
-    "serve:dev": "infisical run --domain https://infisical.preciselab.space --projectId 28d53423-b8f5-499f-b76c-bc714da0e8d6 --env=dev --path=/apps/app -- node .output/server/index.mjs",
+    "build:prod": "nuxt build",
+    "build:dev": "nuxt build",
+    "serve:prod": "node .output/server/index.mjs",
+    "serve:dev": "node .output/server/index.mjs",
     "build": "nuxt build",
-    "dev": "infisical run --env=dev --path=/apps/app -- nuxt dev",
+    "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"

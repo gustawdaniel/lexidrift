@@ -90,7 +90,7 @@ ffmpeg -framerate 30 -i timelapse_%*.webp -c:v libvpx-vp9 -crf 30 -b:v 0 -preset
 Check cookie
 
 ```bash
-infisical run --env=dev --path=/apps/app -- tsx local/cookie.ts
+set -a; . ../.env.app; set +a; tsx local/cookie.ts
 ```
 
 ```bash

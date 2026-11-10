@@ -4,5 +4,6 @@ services:
     ports:
       - "7000:7000"
 #    command: ["pnpm", "serve:prod"]
-    environment:
-      - INFISICAL_TOKEN
+    env_file:
+      - .env
+    restart: unless-stopped

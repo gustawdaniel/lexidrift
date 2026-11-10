@@ -3,5 +3,6 @@ services:
     image: registry.preciselab.space/lexi-drift-lexify
     ports:
       - "3000:3000"
-    environment:
-      - INFISICAL_TOKEN
+    env_file:
+      - .env
+    restart: unless-stopped

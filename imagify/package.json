@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "infisical run --env=dev --path=/apps/imagify -- tsx watch src/index.ts api",
-    "cli": "infisical run --env=dev --path=/apps/imagify -- tsx src/index.ts cli",
+    "dev": "tsx watch src/index.ts api",
+    "cli": "tsx src/index.ts cli",
     "test": "vitest run",
     "check": "pnpm --package=typescript dlx tsc --strict --noEmit",
     "build": "npx tsup src/index.ts",
-    "serve:dev": "infisical run --env=dev --path=/apps/imagify -- node dist/index.js",
-    "serve:prod": "infisical run --domain https://infisical.preciselab.space --projectId 28d53423-b8f5-499f-b76c-bc714da0e8d6 --env=prod --path=/apps/imagify -- node dist/index.js"
+    "serve:dev": "node dist/index.js",
+    "serve:prod": "node dist/index.js"
   },
   "keywords": [],
   "author": "",

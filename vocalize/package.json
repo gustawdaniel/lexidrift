@@ -5,12 +5,12 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "infisical run --env=dev --path=/apps/vocalize -- tsx watch src/index.ts api",
+    "dev": "tsx watch src/index.ts api",
     "test": "vitest run",
     "check": "pnpm --package=typescript dlx tsc --strict --noEmit",
     "build": "npx tsup src/index.ts --format esm",
-    "serve:dev": "infisical run --env=dev --path=/apps/vocalize -- node dist/index.js",
-    "serve:prod": "infisical run --domain https://infisical.preciselab.space --projectId 28d53423-b8f5-499f-b76c-bc714da0e8d6 --env=prod --path=/apps/vocalize -- node dist/index.js"
+    "serve:dev": "node dist/index.js",
+    "serve:prod": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
