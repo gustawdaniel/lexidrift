@@ -45,6 +45,7 @@ jobs:
       - name: Deploy on server
         uses: appleboy/ssh-action@v0.1.10
         with:
+          script_stop: true
           host: ${{ env.SERVER_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -53,4 +54,12 @@ jobs:
             touch /root/${{ env.DIR }}/.env
             echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ env.DOCKER_REGISTRY }} -u "${{ secrets.REGISTRY_USER }}" --password-stdin
             docker pull ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE }}
-            cd /root/${{ env.DIR }} && docker compose up -d --remove-orphans
+            cd /root/${{ env.DIR }}
+            docker compose down --remove-orphans || true
+            docker compose up -d --remove-orphans
+            sleep 5
+            if [ "$(docker compose ps --format '{{.State}}' | grep -c running)" -eq 0 ]; then
+              echo "KONTENER NIE WSTAŁ — logi:"
+              docker compose logs --tail 40
+              exit 1
+            fi
