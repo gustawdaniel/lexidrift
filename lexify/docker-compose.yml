@@ -2,7 +2,7 @@ services:
   lexify:
     image: registry.preciselab.space/lexi-drift-lexify
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3100:3000"   # 3000 na hoście zajmuje fitdrift; Caddy proxuje na 3100
     env_file:
       - .env
     restart: unless-stopped

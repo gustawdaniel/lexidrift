@@ -9,6 +9,8 @@ WORKDIR /app
 
 # Copy package manager files and install dependencies
 COPY package.json pnpm-lock.yaml ./
+# patches/ muszą być przed install — inaczej --frozen-lockfile pada na patchedDependencies
+COPY patches ./patches
 RUN pnpm install --frozen-lockfile
 
 # Copy source code
