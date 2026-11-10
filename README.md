@@ -72,9 +72,10 @@ na hoście `lexidrift` (188.245.164.95). Sekrety **nie** jadą przez CI — leż
   go wymaga. Dlatego `api` i `imagify` mają `pnpm.patchedDependencies` z patchem
   `patches/buffer-equal-constant-time@1.0.1.patch` (fallback na `Buffer`). Bez tego kontener
   wywala się przy starcie na `TypeError: Cannot read properties of undefined (reading 'prototype')`.
-- **Mongo (Atlas `cluster0.3p7sz.mongodb.net`) nie odpowiada** — brak rekordu SRV, więc klaster jest
-  prawdopodobnie zatrzymany (M0) albo usunięty. `lexify` bez bazy wpada w restart loop, `api`
-  wstaje, ale operacje na danych nie zadziałają. Naprawa: wznowić klaster w panelu Atlas.
+- **Baza**: od 2026-11-10 wszystkie usługi wskazują na Atlas `cluster0.a938x.mongodb.net`, baza
+  **`lang`** (26 460 użytkowników, 171 401 słów). Poprzedni klaster `cluster0.3p7sz` nie istnieje
+  (brak rekordu SRV), dlatego `lexify` wcześniej wpadał w restart loop.
+  Uwaga: ten sam klaster obsługuje `invoice` (baza `invoice`) — poświadczenia są wspólne.
 
 ## Contributing
 Contributions and Pull Requests are welcome!
